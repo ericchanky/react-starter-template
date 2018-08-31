@@ -8,11 +8,12 @@ const register = new Register
 route(register)
 
 export default ({ dispatch, getState }) => next => action => {
+  const prevState = getState()
   const nextAction = next(action)
 
   const state = getState()
   const tasks = register.store[nextAction.type] || []
-  tasks.reduce((p, task) => p.then(() => task(state, dispatch)), Promise.resolve())
+  tasks.reduce((p, task) => p.then(() => task(state, dispatch, prevState)), Promise.resolve())
 
   return nextAction
 }
